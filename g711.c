@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sndfile.h>
-
+#include <math.h>
 #include "spandsp.h"
 #include </usr/include/spandsp/test_utils.h>
 
@@ -13,6 +13,16 @@
 #define IN_FILE_NAME        "short_nb_voice.wav"
 #define ENCODED_FILE_NAME   "g711.g711"
 #define OUT_FILE_NAME       "post_g711.wav"
+
+int64_t mse=0;
+int64_t sumInput=0;
+int sampleCnt=0;
+
+void updateSNR(int16_t input, int16_t output){
+    sumInput = sumInput + input*input;
+    mse = mse + (input-output)*(input-output);
+    sampleCnt++;
+}
 
 int16_t amp[65536];
 uint8_t ulaw_data[65536];
@@ -535,6 +545,7 @@ int main(int argc, char *argv[])
                 }
                 for(int i=0;i<BLOCK_LEN;i++){
                     printf("%x||", outdata[i]);
+                    updateSNR(indata[i], outdata[i]);
                 }
                 printf("\n----------------------------------------------------------------------\n");
             }
@@ -570,6 +581,9 @@ int main(int argc, char *argv[])
             close(file);
         }
         printf("'%s' translated to '%s' using %s.\n", in_file, out_file, (law == G711_ALAW)  ?  "A-law"  :  "u-law");
+        float snr = 10*log10f(sumInput/(mse*1.0f));
+        printf("Do ton hao: %f\n", snr);
+        printf("So luong mau: %d\n", sampleCnt);
     }
     return 0;
 }

@@ -6,7 +6,7 @@ LDFLAGS := -lspandsp -lsndfile
 SRC    := g711.c
 
 all:
-	$(CC) -o g711 $(CFLAGS) $(SRC) $(LDFLAGS)
+	$(CC) -o g711 $(CFLAGS) $(SRC) $(LDFLAGS) -lm
 
 clean:
 	rm *.o
