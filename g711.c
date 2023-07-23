@@ -582,7 +582,8 @@ int main(int argc, char *argv[])
         }
         printf("'%s' translated to '%s' using %s.\n", in_file, out_file, (law == G711_ALAW)  ?  "A-law"  :  "u-law");
         float snr = 10*log10f(sumInput/(mse*1.0f));
-        printf("Do ton hao: %f\n", snr);
+        printf("MSE = %f\n", mse/(sampleCnt * 1.0f));
+        printf("SNR = %f\n", snr);
         printf("So luong mau: %d\n", sampleCnt);
     }
     return 0;
